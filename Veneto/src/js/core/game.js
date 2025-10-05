@@ -1788,8 +1788,8 @@ class EmergencyDispatchGame {
         const rawText = testo_chiamata || '';
         // Match any placeholder '(X)' and capture full content including 'indirizzo' if presente
         const match = rawText.match(/\(\s*([^)]+?)\s*\)/i);
-        let sourceList = window.indirizziReali || [];
-        const catMap = window.categorieIndirizzi || {};
+        let sourceList = this.indirizziReali || [];
+        const catMap = this.categorieIndirizzi || {};
         if (match) {
             // Usa il contenuto completo del placeholder per formare la chiave
             const keyRaw = match[1].toLowerCase().trim();
@@ -2078,7 +2078,7 @@ class EmergencyDispatchGame {
             emptyOption.selected = !call.luogo; // Seleziona solo se non c'è valore salvato
             newLuogoSelect.appendChild(emptyOption);
             
-            const opzioniLuogo = ['S - STRADA','P - ES. PUBBLICO','K - CASA','Y - IMP. SPORTIVO','L - IMP. LAVORATIVO','Q - SCUOLA','C - CAMPGANA','M - MONTAGNA','A - MARE,SPIAGGIA,FIUMI,LAGHI','R - IST. DI RICOVERO','Z - ALTRO'];
+            const opzioniLuogo = ['S - STRADA','P - ES. PUBBLICO','K - CASA','Y - IMP. SPORTIVO','L - IMP. LAVORATIVO','Q - SCUOLA','C - CAMPAGNA','M - MONTAGNA','A - MARE,SPIAGGIA,FIUMI,LAGHI','R - IST. DI RICOVERO','Z - ALTRO'];
             opzioniLuogo.forEach(opt => {
                 const option = document.createElement('option');
                 option.value = opt;

@@ -1540,7 +1540,7 @@ class EmergencyDispatchGame {
                 opzioni = ['CARDIOCIRCOLATORIA','RESPIRATORIA','DIGERENTE','NEUROLOGICA','METABOLICA','NEOPLASTICA','URO-GENITALE','PSICHIATRICA','GRAVIDANZA/PARTO','OSTEO MUSCOLARE','ORECCHIO/NASO/GOLA', 'OCULISTICA', 'CUTE/TESS.CONNETTIVO','INFETTIVA', 'NON NOTO'];
                 break;
             case 'INCIDENTE/INFORTUNIO':
-                opzioni = ['FERITA LACERO CONTUSA','FOLGORATO','USTIONI','AMPUTAZIONE','SCONTRO DI GIOCO','SCHIACCIAMENTO'];
+                opzioni = ['FERITA LACERO CONTUSA','TRAUMA PENETRANTE','FOLGORATO','USTIONI','AMPUTAZIONE','SCONTRO DI GIOCO','SCHIACCIAMENTO'];
                 break;
             case 'SOCCORSO PERSONA':
                 opzioni = ['IMPICCAMENTO','TENTATO SUICIDIO','INC. DOMESTICO','APERTURA APPARTAMENTO','INCENDIO','ANNEGAMENTO','RICERCA DISPERSO','ASSISTENZA FFO', 'ASSISTENZA VVF'];
@@ -1568,7 +1568,7 @@ class EmergencyDispatchGame {
                 opzioni = ['INCRODATO', 'SOCCORSO A PERSONA', 'RICERCA DISPERSO', 'ALTRO'];
                 break;
             case 'INTOSSICAZIONE':
-                opzioni = ['ALIMENTARE','FARMACI','SOSTANZE PERICOLOSE', 'ETILICA', 'ALTRA SOSTANZA PERICOLOSA'];
+                opzioni = ['ALIMENTARE','FARMACI','SOSTANZE PERICOLOSE', 'ETILICA', , 'VENIPUNTURA', 'ALTRA SOSTANZA PERICOLOSA'];
                 break;
             case 'ANIMALI':
                 opzioni = ['PUNTURA ANIMALE','MORSO ANIMALE', 'MORSO DI VIPERA'];
@@ -1623,7 +1623,7 @@ class EmergencyDispatchGame {
                 opzioni = ['NORMALE','A FATICA','TOSSE', 'BPCO', 'NON NOTO'];
                 break;
             case 'RESPIRA':
-                opzioni = ['NORMALE','A FATICA','TOSSE', 'BPCO', 'NON NOTO'];
+                opzioni = ['NORMALE','A FATICA','TOSSE', 'BPCO', 'CORPO ESTRANEO', 'NON NOTO'];
                 break;
             case 'DOLORE':
                 opzioni = ['TESTA VOLTO','OCCHI','BOCCA','TORACE','TORACE/EPIGASTRICO/MANDIBOLA','ARTO SUP.','SPALLA','MANO','ADDOME','BACINO','SCHIENA','APPARATO GENITALE','ARTO INF.','PIEDE','SANGUINA','EPISTASSI'];
@@ -1632,13 +1632,13 @@ class EmergencyDispatchGame {
                 opzioni = ['TESTA VOLTO','OCCHI','BOCCA','TORACE','ARTO SUP.','SPALLA','MANO','ADDOME','BACINO','SCHIENA','APPARATO GENITALE','ARTO INF.','PIEDE','SANGUINA','EPISTASSI'];
                 break;
             case 'DISTRETTO TRAUMA':
-                opzioni = ['TESTA VOLTO','OCCHI','BOCCA','TORACE','ARTO SUP.','SPALLA','MANO','ADDOME','BACINO','SCHIENA','APPARATO GENITALE','ARTO INF.','PIEDE','SANGUINA','EPISTASSI'];
+                opzioni = ['TRAUMA PENETRANTE','TESTA VOLTO','OCCHI','BOCCA','TORACE','ARTO SUP.','SPALLA','MANO','ADDOME','BACINO','SCHIENA','APPARATO GENITALE','ARTO INF.','PIEDE','SANGUINA','EPISTASSI'];
                 break;
             case 'EDEMA':
                 opzioni = ['TESTA VOLTO','OCCHI','BOCCA','TORACE','ARTO SUP.','SPALLA','MANO','ADDOME','BACINO','SCHIENA','APPARATO GENITALE','ARTO INF.','PIEDE'];
                 break;
             case 'SANGUINA':
-                opzioni = ['EPISTASSI','FERITA/LACERAZIONE','FERITA ARMA DA FUOCO','FERITA ARMA BIANCA', 'TESTA VOLTO','BOCCA','TORACE/EPIGASTRICO/MANDIBOLA','TORACE','ARTO SUP.','SPALLA','MANO','ADDOME','BACINO','SCHIENA','APPARATO GENITALE','ARTO INF.','PIEDE'];
+                opzioni = ['EPISTASSI','FERITA/LACERAZIONE','FERITA ARMA DA FUOCO','FERITA ARMA BIANCA', 'TESTA VOLTO','BOCCA','EMOTTISI', 'EMATEMESI','TORACE','ARTO SUP.','SPALLA','MANO','ADDOME','EMATEMESI','BACINO','SCHIENA','APPARATO GENITALE','ARTO INF.','PIEDE'];
                 break;
             case 'CUTE':
                 opzioni = ['NORMALE','CIANOTICA','ARROSSATA','SUDATA','PALLIDO','PALLIDO + SUDATO','USTIONE'];
@@ -1653,10 +1653,13 @@ class EmergencyDispatchGame {
                 opzioni = ['IPO/IPERGLICEMIA','INSULINO DIPENDENTE', 'NON NOTO'];
                 break;
             case 'ALTRI SEGNI':
-                opzioni = ['ASTENIA','FEBBRE','TOSSE + FEBBRE','VOMITA','DIARREA','DIARREA E VOMITO','SPOSIZIONAMENTO CATETERE','NO/NON NOTO'];
+                opzioni = ['ASTENIA','FEBBRE','TOSSE + FEBBRE','VOMITA','DIARREA','DIARREA E VOMITO','SPOSIZIONAMENTO SNG/PEG','SPOSIZIONAMENTO CATETERE','NO/NON NOTO'];
+                break;
+            case 'SEGUE':
+                opzioni = ['ASTENIA','FEBBRE','TOSSE + FEBBRE','VOMITA','DIARREA','DIARREA E VOMITO','SPOSIZIONAMENTO SNG/PEG','SPOSIZIONAMENTO CATETERE','NO/NON NOTO'];
                 break;
             case 'TRAVAGLIO':
-                opzioni = ['CONTRAZIONI','ROTTURA DELLE ACQUE','ESPULSIONE','SECONDAMENTO'];
+                opzioni = ['CONTRAZIONI','PARTO PRECIPITOSO','ROTTURA DELLE ACQUE','ESPULSIONE','SECONDAMENTO'];
                 break;
             case 'PSICHIATRICO NOTO':
                 opzioni = ['ASO/TSO','AGITATO', 'NON NOTO'];
@@ -1847,8 +1850,8 @@ class EmergencyDispatchGame {
         const rawText = testo_chiamata || '';
         // Match any placeholder '(X)' and capture full content including 'indirizzo' if presente
         const match = rawText.match(/\(\s*([^)]+?)\s*\)/i);
-        let sourceList = window.indirizziReali || [];
-        const catMap = window.categorieIndirizzi || {};
+        let sourceList = this.indirizziReali || [];
+        const catMap = this.categorieIndirizzi || {};
         if (match) {
             // Usa il contenuto completo del placeholder per formare la chiave
             const keyRaw = match[1].toLowerCase().trim();
@@ -1910,18 +1913,11 @@ class EmergencyDispatchGame {
         }
 
         // Generazione automatica di alcuni campi
-        const luoghi = ['CASA','STRADA','UFFICI ED ES. PUBBL.','STR. SANITARIA','IMPIANTO SPORTIVO','SCUOLE'];
-        const luogo = luoghi[Math.floor(Math.random() * luoghi.length)];
-        
-        const motivi = ['MEDICO ACUTO','SOCCORSO PERSONA','CADUTA','INCIDENTE/INFORTUNIO','INC. STRADALE'];
-        const motivo = motivi[Math.floor(Math.random() * motivi.length)];
-        
-        const coscienze = ['RISPONDE','ALTERATA','NON RISPONDE','INCOSCIENTE','NON NOTO'];
-        const coscienza = coscienze[Math.floor(Math.random() * coscienze.length)];
-
-        // ensure codice list from loaded statiMezzi
-        const codici = this.statiMezzi ? Object.keys(this.statiMezzi) : ['Rosso','Giallo','Verde'];
-        const codice = codici[Math.floor(Math.random() * codici.length)];
+        // Campi lasciati vuoti per inserimento manuale
+        const luogo = '';
+        const motivo = '';
+        const coscienza = '';
+        const codice = '';
 
 
         const now = new Date();
@@ -2228,7 +2224,7 @@ class EmergencyDispatchGame {
             const emptyOption = document.createElement('option');
             emptyOption.value = '';
             emptyOption.textContent = '-- Seleziona note evento --';
-            emptyOption.selected = true; // Sempre selezionato per ogni nuova missione
+            emptyOption.selected = !call.noteEvento; // Seleziona solo se non c'è valore salvato
             newNoteEventoSelect.appendChild(emptyOption);
             
             const opzioniNoteEvento = ['RESPIRA','DOLORE','DEFORMITA','CARDIOCIRCOLATORIO','EDEMA','DISTRETTO TRAUMA','CONVULSIONI','CPSS','VERTIGINI','STATO CONFUSIONALE','ASTENIA','SEGNI','CUTE','SANGUINA','ABRASIONE/CONTUSIONE','DIABETICO','INSUFFICIENZA RENALE','PENETRANTE','PROIETTATO','SBALZATO','INCASTRATO','-2.5 MT','2.5 - 5 MT','+ 5 MT','TRAVAGLIO','CONTRAZIONI - 5 MIN','GRAVIDANZA','PARTO','INCENDIO','INCENDIO INDUSTRIALE','INCENDIO ABITAZIONE','SOSP INTOSSICAZIONE DA MONOSSIDO','AUTOLESIONISMO','PSICHIATRICO NOTO','NO/NON NOTO','ALTRI SEGNI','SEGUE'];
@@ -2236,7 +2232,7 @@ class EmergencyDispatchGame {
                 const option = document.createElement('option');
                 option.value = opt;
                 option.textContent = opt;
-                // Non selezionare automaticamente il valore precedente - sempre vuoto per nuove missioni
+                option.selected = call.noteEvento === opt; // Ripristina valore salvato
                 newNoteEventoSelect.appendChild(option);
             });
             
@@ -2296,6 +2292,16 @@ class EmergencyDispatchGame {
         }
 
         // Popola i campi dipendenti se ci sono valori salvati
+        // Reset campi dipendenti per nuove missioni
+        const dettLuogoSelect = document.getElementById('dett-luogo');
+        if (dettLuogoSelect) {
+            dettLuogoSelect.innerHTML = '<option value="">-- Seleziona dettaglio luogo --</option>';
+        }
+        const dettMotivoSelect = document.getElementById('dett-motivo');
+        if (dettMotivoSelect) {
+            dettMotivoSelect.innerHTML = '<option value="">-- Seleziona dettaglio motivo --</option>';
+        }
+        document.getElementById('note-evento2').innerHTML = '<option value="">-- Seleziona note evento 2 --</option>';
         if (call.luogo) {
             this.updateDettLuogo(call.luogo);
         }
