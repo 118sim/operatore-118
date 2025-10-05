@@ -646,6 +646,7 @@ class EmergencyDispatchGame {
         this.mezzi = [];
         this.calls = new Map();
         this.hospitals = [];
+        this.missionCounter = {}; // Inizializza il contatore delle missioni
         this.indirizziReali = window.indirizziReali || [];
         this.chiamateTemplate = null;
         this.categorieIndirizzi = window.categorizzaIndirizzi ? window.categorizzaIndirizzi() : {
@@ -656,14 +657,6 @@ class EmergencyDispatchGame {
             luogo_pubblico: [],
             rsa: []
         };
-
-        // Counters for mission numbers per central
-        this.missionCounter = { 
-            'FG': 0, 'BA': 0, 'BR': 0, 'LE': 0, 'TA': 0,
-            '118 Foggia Soccorso': 0, '118 Bari Soccorso': 0, 
-            '118 Brindisi Soccorso': 0, '118 Lecce Soccorso': 0, '118 Taranto Soccorso': 0
-        };
-        
         // Verifica che GameUI sia definito prima di creare l'istanza
         if (typeof GameUI === 'undefined') {
             console.error('GameUI non è definito. Assicurati che UI.js sia caricato prima di game.js');
@@ -1611,8 +1604,8 @@ class EmergencyDispatchGame {
         const rawText = testo_chiamata || '';
         // Match any placeholder '(X)' and capture full content including 'indirizzo' if presente
         const match = rawText.match(/\(\s*([^)]+?)\s*\)/i);
-        let sourceList = window.indirizziReali || [];
-        const catMap = window.categorieIndirizzi || {};
+        let sourceList = this.indirizziReali || [];
+        const catMap = this.categorieIndirizzi || {};
         if (match) {
             // Usa il contenuto completo del placeholder per formare la chiave
             const keyRaw = match[1].toLowerCase().trim();
@@ -1692,15 +1685,11 @@ class EmergencyDispatchGame {
         const year = now.getFullYear();
         const decina = Math.floor((year % 100) / 10);
         const unita = year % 10;
-        const central = window.selectedCentral || 'BA';
+        const central = window.selectedCentral || 'SORES';
         const codeMap = { 
-            'FG': 1, 
-            'BA': 2, 
-            'BR': 3,
-            'LE': 4,
-            'TA': 5
+            'SORES': 1
         };
-        const code = codeMap[central] || 2;
+        const code = codeMap[central] || 1;
         // incrementa contatore progressivo per central
         this.missionCounter[central] = (this.missionCounter[central] || 0) + 1;
         
@@ -1908,7 +1897,7 @@ class EmergencyDispatchGame {
             emptyOption.selected = !call.luogo; // Seleziona solo se non c'è valore salvato
             newLuogoSelect.appendChild(emptyOption);
             
-            const opzioniLuogo = ['S - STRADA','P - ES. PUBBLICO','K - CASA','Y - IMP. SPORTIVO','L - IMP. LAVORATIVO','Q - SCUOLA','Z - ALTRO'];
+            const opzioniLuogo = ['S - STRADA','P - ES. PUBBLICO','K - CASA','Y - IMP. SPORTIVO','L - IMP. LAVORATIVO','Q - SCUOLA','R - STR. SANITARIA','Z - ALTRO'];
             opzioniLuogo.forEach(opt => {
                 const option = document.createElement('option');
                 option.value = opt;
