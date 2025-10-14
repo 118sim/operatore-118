@@ -480,7 +480,7 @@
   "Nome Postazione": "Croce dell'Adda",
   "Coordinate Postazione": "45.534073, 9.518203",
   "Mezzo": "MSB",
-  "Nome radio": " PASCAD_227.17A2",
+  "Nome radio": "PASCAD_227.17A2",
   "Convenzione": "H8_2",
   "Orario di lavoro": "14:00-22:00",
   "Giorni": "LUN-SAB"
@@ -633,7 +633,7 @@
   "Nome Postazione": "Croce Rossa Italiana - Lodi",
   "Coordinate Postazione": "45.3143629,9.4957793",
   "Mezzo": "MSB",
-  "Nome radio": "CRI_LO_155.01A2",
+  "Nome radio": "CRI_LO_355",
   "Convenzione": "GET_3",
   "Orario di lavoro": "20:00-8:00",
   "Giorni": "LUN-DOM"
@@ -1065,10 +1065,19 @@
   "Nome Postazione": "Misericordia Inzago",
   "Coordinate Postazione": "45.541701, 9.482850",
   "Mezzo": "MSB",
-  "Nome radio": "MISINZ_310",
+  "Nome radio": "MISINZ_312",
+  "Convenzione": "GET_3",
+  "Orario di lavoro": "8:00-15;00",
+  "Giorni": "MER, SAB"
+ },
+ {
+  "Nome Postazione": "Misericordia Inzago",
+  "Coordinate Postazione": "45.541701, 9.482850",
+  "Mezzo": "MSB",
+  "Nome radio": "MISINZ_312",
   "Convenzione": "GET_3",
   "Orario di lavoro": "18:30-00:30",
-  "Giorni": "LUN-SAB"
+  "Giorni": "LUN-VEN"
  },
  {
   "Nome Postazione": "Nord Soccorso Legnano",
@@ -1309,7 +1318,7 @@
   "Coordinate Postazione": "45.201251,9.146601",
   "Mezzo": "MSB",
   "Nome radio": "PV_900",
-  "Convenzione": "H12_2",
+  "Convenzione": "AGG_2",
   "Orario di lavoro": "8:00-20:00",
   "Giorni": "LUN-VEN"
  },
@@ -1342,7 +1351,7 @@
  },
  {
   "Nome Postazione": "Postazione AREU - Vigevano",
-  "Coordinate Postazione": "45.319832,8.865183",
+  "Coordinate Postazione": "45.3194571,8.8654733",
   "Mezzo": "MSA2",
   "Nome radio": "PV_003 ",
   "Convenzione": "H24",
@@ -1351,7 +1360,7 @@
  },
  {
   "Nome Postazione": "Postazione AREU - Voghera",
-  "Coordinate Postazione": "45.319832,8.865183",
+  "Coordinate Postazione": "44.9948263,9.0150704",
   "Mezzo": "MSA2",
   "Nome radio": "PV_005 ",
   "Convenzione": "H24",
