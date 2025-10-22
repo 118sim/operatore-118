@@ -181,12 +181,17 @@ class GameUI {
         let ospedaleHtml = '';
         if (call.mezziAssegnati && call.mezziAssegnati.length > 0 && window.game && window.game.mezzi) {
             const mezzi = window.game.mezzi.filter(m => (call.mezziAssegnati||[]).includes(m.nome_radio));
-            // Filtra solo MSA1_A, MSA2_A, ELI o MSB
+            // Filtra solo MSI, MSA, VLV, ELI, MSB
             const eligibleMezzi = mezzi.filter(m => {
                 const tipo = m.tipo_mezzo || '';
-                return tipo === 'MSA1_A' || tipo === 'MSA2_A' || tipo.includes('ELI') || tipo === 'MSB';
+                return tipo.startsWith('MSI') || tipo.startsWith('MSA') || tipo.startsWith('VLV') || tipo.includes('ELI') || tipo.startsWith('MSB');
             });
-            const mezzoConOspedale = eligibleMezzi.find(m => m.ospedale && m.codice_trasporto && m._trasportoConfermato);
+            // Cerca prima un mezzo NON VLV con ospedale confermato (priorità a MSB, MSI, MSA, ELI)
+            let mezzoConOspedale = eligibleMezzi.find(m => !m.tipo_mezzo.startsWith('VLV') && m.ospedale && m.codice_trasporto && m._trasportoConfermato);
+            // Se non c'è, cerca VLV
+            if (!mezzoConOspedale) {
+                mezzoConOspedale = eligibleMezzi.find(m => m.ospedale && m.codice_trasporto && m._trasportoConfermato);
+            }
             if (mezzoConOspedale) {
                 ospedaleHtml = ` <span style='margin-left:12px;'></span><span style='font-size:13px;'>Destinazione: <b>${mezzoConOspedale.ospedale.nome}</b></span> <span style='display:inline-block;width:5px;height:5px;margin-left:6px;vertical-align:middle;background:${getColoreCodice(mezzoConOspedale.codice_trasporto)};background-size:cover;border:1px solid #000;'></span>`;
             }
@@ -355,12 +360,17 @@ class GameUI {
         let ospedaleHtml = '';
         if (call.mezziAssegnati && call.mezziAssegnati.length > 0 && this.game && this.game.mezzi) {
             const mezzi = this.game.mezzi.filter(m => (call.mezziAssegnati||[]).includes(m.nome_radio));
-            // Filtra solo MSA1_A, MSA2_A, ELI o MSB
+            // Filtra solo MSI, MSA, VLV, ELI, MSB
             const eligibleMezzi = mezzi.filter(m => {
                 const tipo = m.tipo_mezzo || '';
-                return tipo === 'MSA1_A' || tipo === 'MSA2_A' || tipo.includes('ELI') || tipo === 'MSB';
+                return tipo.startsWith('MSI') || tipo.startsWith('MSA') || tipo.startsWith('VLV') || tipo.includes('ELI') || tipo.startsWith('MSB');
             });
-            const mezzoConOspedale = eligibleMezzi.find(m => m.ospedale && m.codice_trasporto && m._trasportoConfermato);
+            // Cerca prima un mezzo NON VLV con ospedale confermato (priorità a MSB, MSI, MSA, ELI)
+            let mezzoConOspedale = eligibleMezzi.find(m => !m.tipo_mezzo.startsWith('VLV') && m.ospedale && m.codice_trasporto && m._trasportoConfermato);
+            // Se non c'è, cerca VLV
+            if (!mezzoConOspedale) {
+                mezzoConOspedale = eligibleMezzi.find(m => m.ospedale && m.codice_trasporto && m._trasportoConfermato);
+            }
             if (mezzoConOspedale) {
                 ospedaleHtml = ` <span style='margin-left:12px;'></span><span style='font-size:13px;'>Destinazione: <b>${mezzoConOspedale.ospedale.nome}</b></span> <span style='display:inline-block;width:16px;height:16px;border-radius:4px;margin-left:6px;vertical-align:middle;background:${getColoreCodice(mezzoConOspedale.codice_trasporto)};border:1px solid #888;'></span>`;
             }
@@ -471,11 +481,22 @@ class GameUI {
             mezzi.forEach(m => {
                 let testoScheda = '';
                 const avanzati = mezzi.filter(x => (x.tipo_mezzo && (x.tipo_mezzo.startsWith('MSA1') || x.tipo_mezzo.startsWith('MSA2') || (x.tipo_mezzo.toUpperCase().includes('ELI')))) && (x.comunicazioni||[]).some(c => c.toLowerCase().includes('report pronto')));
+                const vlvPresenti = mezzi.filter(x => x.tipo_mezzo && x.tipo_mezzo.startsWith('VLV') && (x.comunicazioni||[]).some(c => c.toLowerCase().includes('report pronto')));
+                
                 // Se c'è almeno un MSB in stato 3 e almeno un avanzato, non mostrare il report del MSB
                 const isMSBStato3 = m.tipo_mezzo && m.tipo_mezzo.startsWith('MSB') && m.stato === 3;
                 const altriAvanzatiPresenti = avanzati.length > 0;
+                
+                // Se c'è un VLV con report pronto, mostra SOLO il report del VLV
+                const isVLV = m.tipo_mezzo && m.tipo_mezzo.startsWith('VLV');
+                const altriVLVPresenti = vlvPresenti.length > 0 && !isVLV;
+                
                 let mostraReport = true;
                 if (isMSBStato3 && altriAvanzatiPresenti) {
+                    mostraReport = false;
+                }
+                // Nascondi report di MSI/MSA se c'è VLV
+                if (altriVLVPresenti && (m.tipo_mezzo.startsWith('MSI') || m.tipo_mezzo.startsWith('MSA'))) {
                     mostraReport = false;
                 }
                 
@@ -486,13 +507,10 @@ class GameUI {
                     // Determina il tipo di mezzo per la ricerca del report (mappatura per Veneto)
                     let tipo = '';
                     if (m.tipo_mezzo && m.tipo_mezzo.startsWith('MSB')) tipo = 'MSB';
-                    else if (m.tipo_mezzo && m.tipo_mezzo === 'MSI') tipo = 'MSA1'; // MSI usa report MSA1
-                    else if (m.tipo_mezzo && m.tipo_mezzo === 'MSA') tipo = 'MSA2'; // MSA usa report MSA2
-                    else if (m.tipo_mezzo && m.tipo_mezzo === 'VLV') tipo = 'MSA2'; // VLV usa report MSA2
+                    else if (m.tipo_mezzo && m.tipo_mezzo.startsWith('MSI')) tipo = 'MSA1'; // MSI (MSA1_A) usa report MSA1
+                    else if (m.tipo_mezzo && m.tipo_mezzo.startsWith('MSA')) tipo = 'MSA2'; // MSA (MSA2_A) usa report MSA2
+                    else if (m.tipo_mezzo && m.tipo_mezzo.startsWith('VLV')) tipo = 'MSA2'; // VLV (MSA2) usa report MSA2
                     else if (m.tipo_mezzo && m.tipo_mezzo.toUpperCase().includes('ELI')) tipo = 'MSA2'; // ELI usa sempre MSA2
-                    // Fallback per altre regioni
-                    else if (m.tipo_mezzo && m.tipo_mezzo.startsWith('MSA1')) tipo = 'MSA1';
-                    else if (m.tipo_mezzo && m.tipo_mezzo.startsWith('MSA2')) tipo = 'MSA2';
                     
                     console.log('[DEBUG UI] Mezzo:', m.nome_radio, 'tipo_mezzo:', m.tipo_mezzo, 'mapped tipo:', tipo);
                     
@@ -598,8 +616,8 @@ class GameUI {
                         return 0;
                     });
 
-                    // Per veicoli MSA1, MSA2 e VLV mostriamo solo rientro o accompagna
-                    if (m.tipo_mezzo === 'MSA1' || m.tipo_mezzo === 'MSA2' || m.tipo_mezzo === 'VLV') {
+                    // Per veicoli VLV mostriamo solo rientro o accompagna
+                    if (m.tipo_mezzo && m.tipo_mezzo.startsWith('VLV')) {
                         const selectOsp = `<select class='select-ospedale' data-nome='${m.nome_radio}'>`+
                             `<option value="__rientro__">Rientro in sede</option>`+
                             `<option value="__accompagna__">Accompagna in ospedale</option>`+
@@ -755,10 +773,21 @@ class GameUI {
                             return;
                         }
                         // Normal transport for MSB, MSA1_A, MSA2_A, ELI
-                        mezzo.ospedale = ospedali.find(o => o.nome.trim() === ospedaleSel) || mezzo.ospedale;
-                        if (codiceSel) mezzo.codice_trasporto = codiceSel;                        mezzo._trasportoConfermato = true;
+                        if (ospedaleSel === "__accompagna__") {
+                            // Assign nearest hospital
+                            const nearest = ospedaliOrdinati[0];
+                            if (nearest) mezzo.ospedale = nearest;
+                            mezzo.comunicazioni = ['Accompagna in ospedale, Verde'];
+                        } else if (ospedaleSel === "__rientro__") {
+                            mezzo.ospedale = null;
+                            mezzo.comunicazioni = ['Rientro in sede'];
+                        } else {
+                            mezzo.ospedale = ospedali.find(o => o.nome.trim() === ospedaleSel) || mezzo.ospedale;
+                            mezzo.comunicazioni = [ospedaleSel + ', ' + codiceSel.charAt(0)];
+                        }
+                        if (codiceSel) mezzo.codice_trasporto = codiceSel;
+                        mezzo._trasportoConfermato = true;
                         mezzo._reportProntoInviato = true; // Assicuriamoci che il report sia segnato come inviato
-                        mezzo.comunicazioni = [ospedaleSel + ', ' + codiceSel.charAt(0)];
                         aggiornaMissioniPerMezzo(mezzo);
                         if (window.avanzaMezzoAStato4DopoConferma) window.avanzaMezzoAStato4DopoConferma(mezzo);
 

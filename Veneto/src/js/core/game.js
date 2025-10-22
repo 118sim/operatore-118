@@ -340,11 +340,11 @@ function gestisciStato3(mezzo, call) {
         let reportKey = null;
         if (mezzoType.startsWith('MSB')) {
             reportKey = 'MSB';
-        } else if (mezzoType === 'MSI') {
+        } else if (mezzoType.startsWith('MSI')) {
             reportKey = 'MSA1'; // MSI usa report MSA1
-        } else if (mezzoType === 'MSA') {
+        } else if (mezzoType.startsWith('MSA')) {
             reportKey = 'MSA2'; // MSA usa report MSA2
-        } else if (mezzoType === 'VLV') {
+        } else if (mezzoType.startsWith('VLV')) {
             reportKey = 'MSA2'; // VLV usa report MSA2
         } else if (mezzoType === 'ELI') {
             reportKey = 'MSA2'; // ELI usa report MSA2
@@ -452,11 +452,11 @@ function gestisciStato3(mezzo, call) {
                                     // Mappa completa dei tipi di mezzo ai report per Veneto
                                     if (mezzoType.startsWith('MSB') || mezzoType.startsWith('BLS')) {
                                         reportKey = 'MSB';
-                                    } else if (mezzoType === 'MSI' || mezzoType === 'ILS') {
+                                    } else if (mezzoType.startsWith('MSI') || mezzoType === 'ILS') {
                                         reportKey = 'MSA1'; // MSI e ILS usano report MSA1
-                                    } else if (mezzoType === 'MSA' || mezzoType === 'ALS') {
+                                    } else if (mezzoType.startsWith('MSA') || mezzoType === 'ALS') {
                                         reportKey = 'MSA2'; // MSA e ALS usano report MSA2
-                                    } else if (mezzoType === 'VLV') {
+                                    } else if (mezzoType.startsWith('VLV')) {
                                         reportKey = 'MSA2'; // VLV usa report MSA2
                                     } else if (mezzoType === 'ELI') {
                                         reportKey = 'MSA2'; // ELI usa report MSA2
