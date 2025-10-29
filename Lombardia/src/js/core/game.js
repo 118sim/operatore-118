@@ -1862,8 +1862,12 @@ class EmergencyDispatchGame {
             // Usa il contenuto completo del placeholder per formare la chiave
             const keyRaw = match[1].toLowerCase().trim();
             const key = keyRaw.replace(/\s+/g, '_');
+            console.log('[DEBUG] Placeholder trovato:', match[1], '→ chiave:', key, '→ categorie disponibili:', Object.keys(catMap), '→ match trovato:', !!catMap[key]);
             if (catMap[key] && catMap[key].length) {
                 sourceList = catMap[key];
+                console.log('[DEBUG] Usando categoria specifica:', key, 'con', sourceList.length, 'indirizzi');
+            } else {
+                console.log('[DEBUG] Categoria non trovata! Usando lista completa con', sourceList.length, 'indirizzi');
             }
         }
         // Seleziona indirizzo evitando ripetizioni recenti
