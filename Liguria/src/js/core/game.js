@@ -649,7 +649,7 @@ class EmergencyDispatchGame {
         };
 
         // Counters for mission numbers per ASL central
-        this.missionCounter = { ASL1: 0, ASL2: 0, ASL3: 0, ASL4: 0, ASL5: 0 };
+        this.missionCounter = { ASL1: 0, ASL2: 0, ASL3: 0, ASL5: 0 };
         
         // Verifica che GameUI sia definito prima di creare l'istanza
         if (typeof GameUI === 'undefined') {
@@ -888,32 +888,59 @@ class EmergencyDispatchGame {
         const minLoad = 6;
         const maxLoad = 15;
 
-        // Calcola chiamate target per quest'ora
-        const hourlyMultiplier = hourlyProfile[currentHour] || 0.5;
-        let callsThisHour = Math.round(baseLoad * hourlyMultiplier);
-        
-        // Applica modificatori giornalieri
-        callsThisHour = Math.round(callsThisHour * dayModifiers[currentDay]);
-        
-        // Applica moltiplicatore utente per frequenza chiamate
-        const userMultiplier = window.callFrequencyMultiplier || 1.0;
-        callsThisHour = Math.round(callsThisHour * userMultiplier);
-        
-        // Assicura che rimanga nei limiti (con range esteso per moltiplicatori alti)
-        const adjustedMin = Math.round(minLoad * userMultiplier);
-        const adjustedMax = Math.round(maxLoad * userMultiplier * 1.5); // Permette fino a 22 chiamate/ora
-        callsThisHour = Math.max(adjustedMin, Math.min(adjustedMax, callsThisHour));
+        // Inizializza il sistema di distribuzione oraria se non esiste o se è cambiata l'ora
+        if (!this.callSchedule || this.callSchedule.hour !== currentHour) {
+            // Calcola chiamate target per quest'ora
+            const hourlyMultiplier = hourlyProfile[currentHour] || 0.5;
+            let callsThisHour = Math.round(baseLoad * hourlyMultiplier);
+            
+            // Applica modificatori giornalieri
+            callsThisHour = Math.round(callsThisHour * dayModifiers[currentDay]);
+            
+            // Applica moltiplicatore utente per frequenza chiamate
+            const userMultiplier = window.callFrequencyMultiplier || 1.0;
+            callsThisHour = Math.round(callsThisHour * userMultiplier);
+            
+            // Assicura che rimanga nei limiti (con range esteso per moltiplicatori alti)
+            const adjustedMin = Math.round(minLoad * userMultiplier);
+            const adjustedMax = Math.round(maxLoad * userMultiplier * 1.5); // Permette fino a 22 chiamate/ora
+            callsThisHour = Math.max(adjustedMin, Math.min(adjustedMax, callsThisHour));
 
-        // Controlla eventi speciali (5% probabilità ogni ora)
-        if (Math.random() < 0.05) {
-            callsThisHour = Math.round(callsThisHour * (1.5 + Math.random())); // 1.5x - 2.5x
+            // Controlla eventi speciali (5% probabilità ogni ora)
+            if (Math.random() < 0.05) {
+                callsThisHour = Math.round(callsThisHour * (1.5 + Math.random())); // 1.5x - 2.5x
+            }
+
+            // Genera intervalli distribuiti uniformemente nell'ora con piccola variazione
+            const baseInterval = 3600 / callsThisHour; // secondi tra chiamate
+            const intervals = [];
+            let cumulativeTime = 0;
+            
+            for (let i = 0; i < callsThisHour; i++) {
+                // Aggiungi piccola variazione casuale (±15%) per naturalezza
+                const variation = 1 + (Math.random() - 0.5) * 0.3;
+                const interval = Math.round(baseInterval * variation);
+                intervals.push(interval);
+                cumulativeTime += interval;
+            }
+            
+            // Normalizza gli intervalli per assicurare che riempiano esattamente l'ora
+            const scaleFactor = 3600 / cumulativeTime;
+            this.callSchedule = {
+                hour: currentHour,
+                intervals: intervals.map(i => Math.round(i * scaleFactor)),
+                currentIndex: 0
+            };
         }
 
-        // Calcola intervallo fino alla prossima chiamata
-        const baseInterval = (60 * 60) / callsThisHour; // secondi tra chiamate
-        const variation = 0.3; // ±30% variazione
-        const randomFactor = 1 + (Math.random() - 0.5) * 2 * variation;
-        const interval = Math.round(baseInterval * randomFactor);
+        // Prendi il prossimo intervallo dalla schedulazione
+        const interval = this.callSchedule.intervals[this.callSchedule.currentIndex] || 360;
+        this.callSchedule.currentIndex++;
+        
+        // Se abbiamo finito gli intervalli di quest'ora, reset per la prossima ora
+        if (this.callSchedule.currentIndex >= this.callSchedule.intervals.length) {
+            this.callSchedule = null;
+        }
 
         simTimeout(() => {
             if (window.autoCallsEnabled) {
@@ -939,8 +966,6 @@ class EmergencyDispatchGame {
                 initCenter = [44.2978, 8.4673]; break;
             case 'ASL3': // Genova Ospedale San Martino
                 initCenter = [44.4056, 8.9567]; break;
-            case 'ASL4': // Ospedale Lavagna
-                initCenter = [44.3086, 9.3468]; break;
             case 'ASL5': // Ospedale La Spezia
                 initCenter = [44.0987, 9.8248]; break;
         }
@@ -955,7 +980,6 @@ class EmergencyDispatchGame {
         ASL1: 'src/data/Mezzi asl 1.json', 
         ASL2: 'src/data/Mezzi asl 2.json', 
         ASL3: 'src/data/Mezzi asl 3.json', 
-        ASL4: 'src/data/Mezzi asl 4.json', 
         ASL5: 'src/data/Mezzi asl 5.json' 
     };
     const allRaw = [];
@@ -1236,11 +1260,10 @@ class EmergencyDispatchGame {
             // Determine if postazione is external to selected central or a Creli postazione
             const sel = window.selectedCentral;
             const isSpecial = postazione.isCreli ||
-                (sel === 'ASL1' && (postazione.isASL2 || postazione.isASL3 || postazione.isASL4 || postazione.isASL5)) ||
-                (sel === 'ASL2' && (postazione.isASL1 || postazione.isASL3 || postazione.isASL4 || postazione.isASL5)) ||
-                (sel === 'ASL3' && (postazione.isASL1 || postazione.isASL2 || postazione.isASL4 || postazione.isASL5)) ||
-                (sel === 'ASL4' && (postazione.isASL1 || postazione.isASL2 || postazione.isASL3 || postazione.isASL5)) ||
-                (sel === 'ASL5' && (postazione.isASL1 || postazione.isASL2 || postazione.isASL3 || postazione.isASL4));
+                (sel === 'ASL1' && (postazione.isASL2 || postazione.isASL3 || postazione.isASL5)) ||
+                (sel === 'ASL2' && (postazione.isASL1 || postazione.isASL3 || postazione.isASL5)) ||
+                (sel === 'ASL3' && (postazione.isASL1 || postazione.isASL2 || postazione.isASL5)) ||
+                (sel === 'ASL5' && (postazione.isASL1 || postazione.isASL2 || postazione.isASL3));
             const marker = L.marker([postazione.lat, postazione.lon], { 
                 icon: this.getPostazioneIcon(hasLiberi, isSpecial) 
             }).addTo(this.map)
@@ -1563,7 +1586,7 @@ class EmergencyDispatchGame {
             });
             
             // Compute displayName with prefix when vehicle from another central
-            const prefixMap = { ASL1:['ASL2','ASL3','ASL4','ASL5'], ASL2:['ASL1','ASL3','ASL4','ASL5'], ASL3:['ASL1','ASL2','ASL4','ASL5'], ASL4:['ASL1','ASL2','ASL3','ASL5'], ASL5:['ASL1','ASL2','ASL3','ASL4'] };
+            const prefixMap = { ASL1:['ASL2','ASL3','ASL5'], ASL2:['ASL1','ASL3','ASL5'], ASL3:['ASL1','ASL2','ASL5'], ASL5:['ASL1','ASL2','ASL3'] };
             let markerName = m.nome_radio;
             if (vehicleCentral && prefixMap[currentCentral]?.includes(vehicleCentral)) {
                 markerName = `(${vehicleCentral}) ${m.nome_radio}`;
@@ -1769,7 +1792,7 @@ class EmergencyDispatchGame {
         const decina = Math.floor((year % 100) / 10);
         const unita = year % 10;
         const central = window.selectedCentral || 'ASL1';
-        const codeMap = { ASL1: 1, ASL2: 2, ASL3: 3, ASL4: 4, ASL5: 5 };
+        const codeMap = { ASL1: 1, ASL2: 2, ASL3: 3, ASL5: 5 };
         const code = codeMap[central] || 1;
         // incrementa contatore progressivo per central
         this.missionCounter[central] = (this.missionCounter[central] || 0) + 1;
@@ -1891,7 +1914,7 @@ class EmergencyDispatchGame {
                 const disabledAttr = ![1,2,7].includes(m.stato) ? 'disabled' : '';
                 const currentCentral = (window.selectedCentral||'').trim().toUpperCase();
                 const vehicleCentral = (m.central||'').trim().toUpperCase();
-                const prefixMap = { ASL1:['ASL2','ASL3','ASL4','ASL5'], ASL2:['ASL1','ASL3','ASL4','ASL5'], ASL3:['ASL1','ASL2','ASL4','ASL5'], ASL4:['ASL1','ASL2','ASL3','ASL5'], ASL5:['ASL1','ASL2','ASL3','ASL4'] };
+                const prefixMap = { ASL1:['ASL2','ASL3','ASL5'], ASL2:['ASL1','ASL3','ASL5'], ASL3:['ASL1','ASL2','ASL5'], ASL5:['ASL1','ASL2','ASL3'] };
                 let displayName = m.nome_radio;
                 if (vehicleCentral && prefixMap[currentCentral]?.includes(vehicleCentral)) {
                     displayName = `(${vehicleCentral}) ${m.nome_radio}`;
@@ -2174,7 +2197,7 @@ class EmergencyDispatchGame {
             // Compute displayName with prefix for vehicles from other centrals
             const currentCentral = (window.selectedCentral||'').trim().toUpperCase();
             const vehicleCentral = (m.central||'').trim().toUpperCase();
-            const prefixMap = { ASL1:['ASL2','ASL3','ASL4','ASL5'], ASL2:['ASL1','ASL3','ASL4','ASL5'], ASL3:['ASL1','ASL2','ASL4','ASL5'], ASL4:['ASL1','ASL2','ASL3','ASL5'], ASL5:['ASL1','ASL2','ASL3','ASL4'] };
+            const prefixMap = { ASL1:['ASL2','ASL3','ASL5'], ASL2:['ASL1','ASL3','ASL5'], ASL3:['ASL1','ASL2','ASL5'], ASL5:['ASL1','ASL2','ASL3'] };
             let displayName = m.nome_radio;
             if (vehicleCentral && prefixMap[currentCentral]?.includes(vehicleCentral)) {
                 displayName = `(${vehicleCentral}) ${m.nome_radio}`;
