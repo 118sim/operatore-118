@@ -1,4 +1,4 @@
-[
+
  {
   "Nome Postazione": "ATA Soccorso Milano Sez. Bagolino",
   "Coordinate Postazione": "45.8194189,10.4700884",
@@ -689,8 +689,17 @@
   "Mezzo": "MSB",
   "Nome radio": "CRIDAL_362",
   "Convenzione": "GET_3",
-  "Orario di lavoro": "19:00-00:00, SAB e DOM 7:00-00:00",
+  "Orario di lavoro": "19:00-00:00",
   "Giorni": "LUN-DOM"
+ },
+ {
+  "Nome Postazione": "Croce Rossa Italiana - Dalmine",
+  "Coordinate Postazione": "45.6475586,9.5953254",
+  "Mezzo": "MSB",
+  "Nome radio": "CRIDAL_362",
+  "Convenzione": "GET_3",
+  "Orario di lavoro": "7:00-00:00",
+  "Giorni": "SAB-DOM"
  },
  {
   "Nome Postazione": "Croce Rossa Italiana - Desenzano",
@@ -833,7 +842,7 @@
   "Mezzo": "MSB",
   "Nome radio": "CRIOMO_346",
   "Convenzione": "GET_3",
-  "Orario di lavoro": "7:30-19:30",
+  "Orario di lavoro": "7:30-00:30",
   "Giorni": "LUN-DOM"
  },
  {
@@ -842,7 +851,7 @@
   "Mezzo": "MSB",
   "Nome radio": "CRIOMO_346",
   "Convenzione": "GET_3",
-  "Orario di lavoro": "19:30-7:30",
+  "Orario di lavoro": "00:30-7:30",
   "Giorni": "VEN-SAB"
  },
  {
@@ -869,8 +878,17 @@
   "Mezzo": "MSB",
   "Nome radio": "CRISER_203",
   "Convenzione": "GET_3",
-  "Orario di lavoro": "19:30-23:00, SAB e DOM 13:00-19:00",
+  "Orario di lavoro": "19:30-23:00",
   "Giorni": "LUN-DOM"
+ },
+ {
+  "Nome Postazione": "Croce Rossa Italiana - Seriate",
+  "Coordinate Postazione": "45.6783189,9.7302458",
+  "Mezzo": "MSB",
+  "Nome radio": "CRISER_203",
+  "Convenzione": "GET_3",
+  "Orario di lavoro": "13:00-19:00",
+  "Giorni": "SAB-DOM"
  },
  {
   "Nome Postazione": "Croce Rossa Italiana - Sondrio",
@@ -968,7 +986,7 @@
   "Mezzo": "MSB",
   "Nome radio": "CRIVDA_373",
   "Convenzione": "GET_3_NE",
-  "Orario di lavoro": "18:00-00:00",
+  "Orario di lavoro": "18:00-1:00",
   "Giorni": "LUN-DOM"
  },
  {
@@ -1110,7 +1128,7 @@
   "Nome Postazione": "GVA Capriolo",
   "Coordinate Postazione": "45.6356245,9.931948",
   "Mezzo": "MSB",
-  "Nome radio": "VOLCAP_130.10B1",
+  "Nome radio": "VOLCAP_330",
   "Convenzione": "GET_3",
   "Orario di lavoro": "00:00-00:00",
   "Giorni": "LUN-DOM"
@@ -1246,7 +1264,7 @@
   "Coordinate Postazione": "45.6870532,9.6355126",
   "Mezzo": "MSB",
   "Nome radio": "BG_900",
-  "Convenzione": "H12_2",
+  "Convenzione": "AGG_2",
   "Orario di lavoro": "8:00-20:00",
   "Giorni": "LUN-DOM"
  },
@@ -1903,8 +1921,17 @@
   "Coordinate Postazione": "46.2563766,10.5156196",
   "Mezzo": "MSA1_A",
   "Nome radio": "VOLPLE_105.07A1",
-  "Convenzione": "H24",
-  "Orario di lavoro": "00:00-00:00",
+  "Convenzione": "H12",
+  "Orario di lavoro": "8:00-20:00",
+  "Giorni": "LUN-DOM"
+ },
+ {
+  "Nome Postazione": "Volontari Ponte di Legno",
+  "Coordinate Postazione": "46.2563766,10.5156196",
+  "Mezzo": "MSB",
+  "Nome radio": "VOLPLE_105.07A1",
+  "Convenzione": "H12_3",
+  "Orario di lavoro": "20:00-8:00",
   "Giorni": "LUN-DOM"
  },
  {
@@ -1997,4 +2024,3 @@
   "Orario di lavoro": "19:00-19:00",
   "Giorni": "LUN-VEN"
  }
-]
