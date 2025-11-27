@@ -1,5 +1,5 @@
 
- {
+ [{
   "Nome Postazione": "ATA Soccorso Milano Sez. Bagolino",
   "Coordinate Postazione": "45.8194189,10.4700884",
   "Mezzo": "MSB",
@@ -2024,3 +2024,4 @@
   "Orario di lavoro": "19:00-19:00",
   "Giorni": "LUN-VEN"
  }
+ ]
