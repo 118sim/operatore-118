@@ -18,6 +18,9 @@ function getSimSpeed() {
 // Definizione variabili globali per i timer simulati (devono essere PRIMA di ogni uso)
 window._simIntervals = [];
 window._simTimeouts = [];
+const nativeSetTimeout = window.setTimeout.bind(window);
+const nativeClearTimeout = window.clearTimeout.bind(window);
+window._activeSimTimeouts = window._activeSimTimeouts || new Set();
 // Disabilita debug e info logs
 // console.log = function() {};
 
@@ -90,20 +93,83 @@ function simInterval(fn, sec) {
     return id;
 }
 
-// Funzione per gestire timeout simulati
+// Funzione per gestire timeout simulati indipendenti dalla velocità di gioco
 function simTimeout(fn, sec) {
-    function wrapper() {
-        if (window.simRunning) {
-            fn();
-        } else {
-            // if paused, defer execution by 1 simulated second
-            simTimeout(fn, 1);
+    if (typeof fn !== 'function') return null;
+
+    const handle = {
+        _isSimTimeout: true,
+        remainingSim: Math.max(Number(sec) || 0, 0),
+        nativeId: null,
+        cancelled: false
+    };
+
+    handle.cancel = () => {
+        if (handle.cancelled) return;
+        handle.cancelled = true;
+        if (handle.nativeId !== null) {
+            nativeClearTimeout(handle.nativeId);
+            handle.nativeId = null;
         }
+        window._activeSimTimeouts.delete(handle);
+    };
+
+    const executeCallback = () => {
+        if (handle.cancelled) return;
+        handle.cancelled = true;
+        window._activeSimTimeouts.delete(handle);
+        fn();
+    };
+
+    const scheduleNext = () => {
+        if (handle.cancelled) return;
+
+        if (!window.simRunning) {
+            handle.nativeId = nativeSetTimeout(scheduleNext, 250);
+            return;
+        }
+
+        if (handle.remainingSim <= 0) {
+            executeCallback();
+            return;
+        }
+
+        const sliceSim = Math.min(handle.remainingSim, 1);
+        const speed = Math.max(getSimSpeed(), 0.1);
+        const delayMs = Math.max(20, (sliceSim * 1000) / speed);
+
+        handle.nativeId = nativeSetTimeout(() => {
+            if (handle.cancelled) return;
+            if (!window.simRunning) {
+                scheduleNext();
+                return;
+            }
+            handle.remainingSim -= sliceSim;
+            scheduleNext();
+        }, delayMs);
+    };
+
+    window._activeSimTimeouts.add(handle);
+
+    if (handle.remainingSim === 0) {
+        handle.nativeId = nativeSetTimeout(executeCallback, 0);
+    } else {
+        scheduleNext();
     }
-    const id = setTimeout(wrapper, sec * 1000 / getSimSpeed());
-    window._simTimeouts.push(id);
-    return id;
+
+    window._simTimeouts.push(handle);
+    return handle;
 }
+
+window.clearTimeout = (function(originalClearTimeout) {
+    return function(timer) {
+        if (timer && typeof timer === 'object' && timer._isSimTimeout && typeof timer.cancel === 'function') {
+            timer.cancel();
+        } else {
+            originalClearTimeout(timer);
+        }
+    };
+})(window.clearTimeout.bind(window));
 
 // Listener per il cambio velocità
 if (typeof window !== 'undefined') {
