@@ -1852,5 +1852,69 @@
       "MSA1": "Femmina, 42 anni, dolore auricolare dx, febbre alta 39,7°C, nausea e disorientamento. PA 92/58 mmHg, FC 120 bpm, SpO₂ 93%. Accesso EV, fluidi rapidi, probabile otite complicata. [DEA]",
       "MSA2": "Femmina, 42 anni, sospetta complicanza infettiva da otite. Febbre alta, confusione mentale, ipotensione. PA 90/55 mmHg, FC 122 bpm, SpO₂ 92%. EV x2, fluidi, O₂. [DEA]"
     }
+  },
+  "chiamata_101": {
+    "testo_chiamata": "Salve… chiamo per me… mi… mi manca l aria… da circa 5… minuti… sono asmatico… ho preso… i puff… ma non funziona… abito in (indirizzo abitazione).",
+
+    "caso_stabile": {
+      "MSB": "Maschio, 32 anni. Episodio di dispnea lieve insorto da pochi minuti. Ha assunto broncodilatatore con beneficio parziale. Parametri vitali: SpO₂ 97%,PA 128/78 mmHg, FC 92 bpm. No cianosi, parla a frasi intere, Paziente noto per asma allergica, nega altre patologie. [PS]", 
+      "MSA1": "Maschio, 32 anni, episodio asmatico con lieve broncospasmo in paziente asmatico noto. Parametri stabili: SpO₂ 97%, PA 125/76 mmHg, FC 90 bpm. Aerosol con salbutamolo 2,5 mg in corso. [PS]", 
+      "MSA2": "Maschio, 32 anni, dispnea lieve-moderata, sibilanti diffusi ma parametri nella norma. SpO₂ 97%, PA 124/75 mmHg, FC 88 bpm. Dopo nebulizzazione miglioramento. Trasportabile da mezzo base. [PS]" 
+    },
+
+    "poco_stabile": {
+      "MSB": "Maschio, 32 anni, dispnea con difficoltà a parlare a frasi complete. Asmatico noto. Ha assunto la sua terapia inalatoria senza alcun effetto. SpO₂ 94%, PA 130/80 mmHg, FC 110 bpm. Uso modesto dei muscoli accessori. [PS]", 
+      "MSA1": "Maschio, 32 anni, broncospasmo moderato, sibilanti marcati, tachicardia. SpO₂ 93%, PA 128/78 mmHg, FC 112 bpm. Trattato con aerosol con salbutamolo + ipratropio, O₂ a 4 L/min con miglioramento. [PS]", 
+      "MSA2": "Maschio, 32 anni, crisi asmatica moderata. Parametri: SpO₂ 93%, PA 126/76 mmHg, FC 110 bpm. Dopo aerosol con salbutamolo + ipratropio, O₂ a 4 L/min miglioramento. [PS]" 
+    },
+
+    "critico": {
+      "MSB": "Maschio, 32 anni. Dispnea grave, parla solo a singole parole, cianosi labiale. SpO₂ 88%, PA 105/65 mmHg, FC 128 bpm. Uso marcato dei muscoli accessori, Necessario supporto avanzato con urgenza. [PS]", 
+      "MSA1": "Maschio, 32 anni, broncospasmo severo, ventilazione ridotta, sibilanti quasi assenti. SpO₂ 86%, PA 100/60 mmHg, FC 130 bpm. O₂ 10 L/min, aerosol con salbutamolo + ipratropio, Idrocortisone 250 mg EV con discreto miglioramento. [PS]", 
+      "MSA2": "Maschio, 32 anni, crisi asmatica severa con ipossia marcata. SpO₂ 85%, PA 98/58 mmHg, FC 132 bpm.  aerosol con salbutamolo + ipratropio + O₂ ad alti flussi, Metilprednisolone 40 mg con parziale beneficio. [PS]" 
+    }
+  },
+  "chiamata_102": {
+    "testo_chiamata": "Salve, mia moglie ha iniziato ad avere forti giramenti di testa, dice che non riesce ad alzarsi dal letto. siamo in (indirizzo abitazione).",
+
+    "caso_stabile": {
+      "MSB": "Donna, 54 anni, episodio di vertigine lieve-moderata insorto da pochi minuti. Vigile, parla normalmente. Cammina con lieve instabilità. Parametri vitali: PA 132/78 mmHg, FC 82 bpm, SpO₂ 98%. Nausea lieve. [PS]",
+      "MSA1": "Donna, 54 anni, verosimile vertigine posizionale. Nausea modesta, parametri stabili: PA 130/78 mmHg, FC 80 bpm, SpO₂ 98%. [PS]",
+      "MSA2": "Donna, 54 anni, vertigine lieve con instabilità moderata, parametri vitali normali (PA 128/76, FC 78, SpO₂ 98%). Miglioramento dopo terapia. Trasportabile da mezzo base. [PS]"
+    },
+
+    "poco_stabile": {
+      "MSB": "Donna, 54 anni, vertigini importanti, nausea severa e difficoltà a mantenere la stazione eretta. Parametri: PA 138/80 mmHg, FC 98 bpm, SpO₂ 97%. [PS]",
+      "MSA1": "Donna, 54 anni, vertigini persistenti con instabilità marcata e nausea continua. PA 136/78 mmHg, FC 100 bpm, SpO₂ 97%. EV + antiemetico + idratazione. [PS]",
+      "MSA2": "Donna, 54 anni, vertigini moderate-severe, parametri stabili, PA 135/76, FC 96, SpO₂ 97%. Necessita di valutazione neurologica. [PS]"
+    },
+
+    "critico": {
+      "MSB": "Donna, 54 anni, vertigini severe con segni neurologici con difficoltà ad articolare parole e non riesce a mantenere la stazione eretta. Parametri: PA 150/85 mmHg, FC 105 bpm, SpO₂ 96%. [STROKE]",
+      "MSA1": "Donna, 54 anni, segni neurologici acuti con disequilibrio grave, disartria, nistagmo verticale. PA 152/88 mmHg, FC 108 bpm, SpO₂ 95%. Accesso EV, O₂, percorso stroke attivato. [STROKE]",
+      "MSA2": "Donna, 54 anni, quadro neurologico critico con forte sospetto stroke. Parametri :PA 148/82, FC 110, SpO₂ 94%. Percorso stroke attivato. [STROKE]"
+    }
+},
+  "chiamata_103": {
+    "testo_chiamata": "Pronto, ho un dolore al petto da circa mezz ora. Non è fortissimo ma non passa… mi sto preoccupando… abito in (indirizzo abitazione).",
+
+    "caso_stabile": {
+      "MSB": "Maschio, 47 anni, dolore toracico puntorio non irradiato, peggiora con movimenti e palpazione. Parametri vitali: PA 132/82 mmHg, FC 84 bpm, SpO₂ 99%. No dispnea,. [PS]",
+      "MSA1": "Maschio, 47 anni, dolore toracico atipico lieve, parametri stabili (PA 130/80, FC 82, SpO₂ 99%). Nessun segno suggestivo per evento cardiaco acuto. [PS]",
+      "MSA2": "Maschio, 47 anni, dolore toracico lieve-moderato non tipico per ischemia. Parametri nella norma (PA 128/78, FC 80, SpO₂ 98%). Trasportabile da mezzo base. [PS]"
+    },
+
+    "poco_stabile": {
+      "MSB": "Maschio, 47 anni, dolore toracico persistente moderato. Sudorazione lieve, PA 148/88 mmHg, FC 102 bpm, SpO₂ 97%. No irradiazione. [PS]",
+      "MSA1": "Maschio, 47 anni, dolore toracico moderato con tachicardia (FC 108). Parametri: PA 146/86 mmHg, SpO₂ 97%. Monitoraggio, O₂ a 2–4 L/min, ECG negativo. [PS]",
+      "MSA2": "Maschio, 47 anni, dolore costante con parametri borderline (PA 150/90, FC 105, SpO₂ 97%). ECG negativo. [PS]"
+    },
+
+    "critico": {
+      "MSB": "Maschio, 47 anni, dolore toracico oppressivo intenso con irradiazione al braccio sinistro e mandibola. Pallore, sudorazione fredda. PA 90/60 mmHg, FC 120 bpm, SpO₂ 94%. [EMODINAMICA]",
+      "MSA1": "Maschio, 47 anni, dolore severo, ipotensione e tachicardia. PA 88/58, FC 124, SpO₂ 93%. Aspirina 300 mg os/ev, O₂, accesso EV x2, monitor. ECG positivo per STEMI. [EMODINAMICA]",
+      "MSA2": "Maschio, 47 anni, dolore toracico severo + segni di shock cardiogeno iniziale. Parametri critici (PA 85/55, FC 128, SpO₂ 92%). ECG positivo per STEMI. [EMODINAMICA]"
+    }
   }
 }
+
